@@ -1,0 +1,73 @@
+/* Fonts */
+
+@font-face {
+    font-family: 'arubaUI';
+    src: url('/assets/fonts/arubaUI.eot');
+    src: local('☺'),
+        url('/assets/fonts/arubaUI.eot?#iefix') format('embedded-opentype'),
+        url('/assets/fonts/arubaUI.woff') format('woff'),
+        url('/assets/fonts/arubaUI.ttf') format('truetype'),
+        url('/assets/fonts/arubaUI.svg#arubaUI') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'opensans';
+    src: url('/assets/fonts/OpenSans-Light.eot');
+    src: local('☺'),
+         url('/assets/fonts/OpenSans-Light.eot?#iefix') format('embedded-opentype'),
+         url('/assets/fonts/OpenSans-Light.woff') format('woff'),
+         url('/assets/fonts/OpenSans-Light.ttf') format('truetype'),
+         url('/assets/fonts/OpenSans-Light.svg#opensans') format('svg');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'opensans';
+    src: url('/assets/fonts/OpenSans-Regular.eot');
+    src: local('☺'),
+         url('/assets/fonts/OpenSans-Regular.eot?#iefix') format('embedded-opentype'),
+         url('/assets/fonts/OpenSans-Regular.woff') format('woff'),
+         url('/assets/fonts/OpenSans-Regular.ttf') format('truetype'),
+         url('/assets/fonts/OpenSans-Regular.svg#opensans') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'opensans';
+    src: url('/assets/fonts/OpenSans-Italic.eot');
+    src: local('☺'),
+         url('/assets/fonts/OpenSans-Italic.eot?#iefix') format('embedded-opentype'),
+         url('/assets/fonts/OpenSans-Italic.woff') format('woff'),
+         url('/assets/fonts/OpenSans-Italic.ttf') format('truetype'),
+         url('/assets/fonts/OpenSans-Italic.svg#opensans') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'opensans';
+    src: url('/assets/fonts/OpenSans-Bold.eot');
+    src: local('☺'),
+         url('/assets/fonts/OpenSans-Bold.eot?#iefix') format('embedded-opentype'),
+         url('/assets/fonts/OpenSans-Bold.woff') format('woff'),
+         url('/assets/fonts/OpenSans-Bold.ttf') format('truetype'),
+         url('/assets/fonts/OpenSans-Bold.svg#opensans') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'opensans';
+    src: url('/assets/fonts/OpenSans-BoldItalic.eot');
+    src: local('☺'),
+         url('/assets/fonts/OpenSans-BoldItalic.eot?#iefix') format('embedded-opentype'),
+         url('/assets/fonts/OpenSans-BoldItalic.woff') format('woff'),
+         url('/assets/fonts/OpenSans-BoldItalic.ttf') format('truetype'),
+         url('/assets/fonts/OpenSans-BoldItalic.svg#opensans') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}

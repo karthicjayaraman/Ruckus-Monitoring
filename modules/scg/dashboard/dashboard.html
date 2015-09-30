@@ -1,0 +1,406 @@
+<div>
+<!--<div class="overlay heavy">
+  <div class="panel_wrapper" style="width:90%; left:5%; top:40%; height:500px;">
+    <div class="panel rounded no_pad">
+      <div class="title_heading"> <a>Access Points</a> <span class="icosolo icon_close" style="position:absolute; top:4px;"></span> </div>
+    </div>
+  </div>
+</div>-->
+<div class="main-section-content foundation-row row1">
+  <div class="section-header-content row collapse">
+    <div class="section-header medium-8 columns">
+      <h1>
+        <label id="mon_overview_header">Devices Overview</label>
+      </h1>
+    </div>
+  </div>
+</div>
+<div class="section-details-content foundation-row row row3">
+  <div class="medium-4 columns timeline_divider">
+    <div class="section_divider"></div>
+  </div>
+  <div class="medium-4 columns timeline">
+    <ul class="seggyc">
+      <li ng-class="{current:polling.menu == '5'}" ng-click="global_menu('5')"><a  href="javascript:void(0)">5</a></li>
+      <li ng-class="{current:polling.menu == '15'}" ng-click="global_menu('15')"><a  href="javascript:void(0)">15</a></li>
+      <li ng-class="{current:polling.menu == '20'}" ng-click="global_menu('20')"><a  href="javascript:void(0)">20</a></li>
+      <li ng-class="{current:polling.menu == '30'}" ng-click="global_menu('30')"><a  href="javascript:void(0)">30</a></li>
+      <li ng-class="{current:polling.menu == '60'}" ng-click="global_menu('60')"><a  href="javascript:void(0)">60</a></li>
+    </ul>
+  </div>
+  <div class="medium-4 columns timeline_divider">
+    <div class="section_divider"></div>
+  </div>
+</div>
+<div class="section-details-content foundation-row row row2">
+  <div class="panel_wrapper">
+    <div class="panel table rounded white no_pad">
+      <div class="title_heading">Devices Overview (Last updated: 2015-08-24 15:32:06) </div>
+      <div class="table_wrapper">
+        <table class="data responsive">
+          <thead>
+            <tr>
+              <th>SCG</th>
+              <th>Cluster Name</th>
+              <th>Role</th>
+              <th>Number of Planes (Control/Data)</th>
+              <th>Number of AP's</th>
+              <th>Number of Clients</th>
+              <th>Tunnels Graph</th>
+              <th>Uptime Graph</th>
+              <th>SCG Version</th>
+              <th>Control Plane Software Version</th>
+              <th>Data Plane Software Version</th>
+              <th>WiFi Controller Licenses(Consumed/Total)</th>
+              <th>Follower</th>
+              <th>TimeStamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="d in scg_devices track by $index" ng-class="{selected: ($index === selectedRowId)}">
+              <td class="name" ng-click="selectSingleRow($index);get_control_plane(d.SCGIP)">{{d.SCGIP}}</td>
+              <td class="location">{{d.ClusterName}}</td>
+              <td class="status">{{d.Role}}</td>
+              <td class="clients">{{d.NoOfPlanes}}</td>
+              <td class="ip">{{d.NoOfAPs}}</td>
+              <td class="type">{{d.NoOfClients}}</td>
+              <td class="type"><img src="images/icon_fallbacks/trend_link.png" width="40px" ng-click="get_tunnel_graph(d.SCGIP)" href="#example_data" class="lightview" /></td>
+              <td class="type"><img src="images/icon_fallbacks/trend_link.png" width="40px" ng-click="get_uptime_graph()"  /></td>
+              <td class="type">{{d.SCGVersion}}</td>
+              <td class="type">{{d.ControlPlaneSoftwareVersion}}</td>
+              <td class="type">{{d.DataPlaneSoftwareVersion}}</td>
+              <td class="type">{{d.WiFiControlLicenses}}</td>
+              <td class="type">{{d.Follower}}</td>
+              <td class="type">{{d.Timestamp.$date | date:'medium'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div ng-repeat="record in get_scg_data track by $index">
+
+
+{{record.cplane.ControlPlaneName}} 
+
+<div ng-repeat="cdata in record.dplane">
+
+{{cdata.Model}}
+
+
+</div>
+
+</div>-->
+
+
+<div class="section-details-content foundation-row row row2">
+  <div class="panel_wrapper" ng-show="scg_info_box">
+    <div class="panel rounded no_pad">
+      <div class="title_heading"> <a>SGG Viewer</a> <span class="icosolo icon_close" ng-click="hideBox()" style="position:absolute; top:4px; cursor:pointer;"></span>   <!--<span ng-click="hideBox()" style="cursor:pointer;">Hide </span>--> </div>
+      <div style="background-color:#FFF; padding:25px;"> 
+        <!--<div style="border:1px solid red; padding:10px; margin-bottom:20px;">-->
+        <div ng-repeat="cdata in get_scg_data track by $index">
+          <div class="section-details-content foundation-row row row2">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">Control Planes : {{cdata.cplane.ControlPlaneName}}</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Description</th>
+                        <th>Firmware</th>
+                        <th>Management IP</th>
+                        <th>Cluster IP</th>
+                        <th>Control IP</th>
+                        <th>Role</th>
+                        <th>Ports</th>
+                        <th>Number Of APs</th>
+                        <th>Clients</th>
+                        <th>CPU Min/Max/Avg (%)</th>
+                        <th>Memory Min/Max/Avg (%)</th>
+                        <th>Disk Min/Max/Avg (G)</th>
+                        <th>Status</th>
+                        <th>Uptime</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="line-height:30px;">
+                        <td class="name">{{cdata.cplane.Model}}</td>
+                        <td class="name">{{cdata.cplane.SerialNumber}}</td>
+                        <td class="name">{{cdata.cplane.Description}}</td>
+                        <td class="name">{{cdata.cplane.Firmware}}</td>
+                        <td class="name">{{cdata.cplane.ManagementIP}}</td>
+                        <td class="name">{{cdata.cplane.ClusterIP}}</td>
+                        <td class="name">{{cdata.cplane.ControlIP}}</td>
+                        <td class="name">{{cdata.cplane.Role}}</td>
+                        <td class="name">{{cdata.cplane.NumberOfPorts}}</td>
+                        <td class="name">{{cdata.cplane.NumberOfAPs}}</td>
+                        <td class="name">{{cdata.cplane.NumberOfClients}}</td>
+                        <td class="name">{{cdata.cplane.cpu_min}}</td>
+                        <td class="name">{{cdata.cplane.memory_min}}</td>
+                        <td class="name">{{cdata.cplane.disk_min}}</td>
+                        <td class="name">{{cdata.cplane.Status}}</td>
+                        <td class="name">{{cdata.cplane.Uptime}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section-details-content foundation-row row row2">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad"> 
+                <!--<div class="title_heading">Control Planes: JHB-SCG-1-C</div>-->
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>Data Plane</th>
+                        <th>IP Address</th>
+                        <th>MAC Address</th>
+                        <th>Model</th>
+                        <th>Serial Number</th>
+                        <th>Firmware</th>
+                        <th>Managed By</th>
+                        <th>Number Of Tunnels</th>
+                        <th>Status</th>
+                        <th>Uptime</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="d_record in cdata.dplane" style="line-height:30px;">
+                        <td class="name">{{d_record.DataPlaneName}}</td>
+                        <td class="name">{{d_record.IPAddress}}</td>
+                        <td class="name">{{d_record.MACAddress}}</td>
+                        <td class="name">{{d_record.Model}}</td>
+                        <td class="name">{{d_record.SerialNumber}}</td>
+                        <td class="name">{{d_record.Firmware}}</td>
+                        <td class="name">{{d_record.ManagedBy}}</td>
+                        <td class="name">{{d_record.NumberOfTunnels}}</td>
+                        <td class="name">{{d_record.Status}}</td>
+                        <td class="name">{{d_record.Uptime}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="section-details-content foundation-row row row3">
+  <div class="medium-4 columns timeline_divider">
+    <div class="section_divider"></div>
+  </div>
+  <div class="medium-4 columns timeline">
+    
+    
+    <ul class="seggyc">
+      <li ng-class="{current:polling.graph == '1'}" ng-click="graph_polling('1')"><a  href="javascript:void(0)">1</a></li>
+      <li ng-class="{current:polling.graph == '2'}" ng-click="graph_polling('2')"><a  href="javascript:void(0)">2</a></li>
+      <li ng-class="{current:polling.graph == '3'}" ng-click="graph_polling('3')"><a  href="javascript:void(0)">3</a></li>
+      <li ng-class="{current:polling.graph == '4'}" ng-click="graph_polling('4')"><a  href="javascript:void(0)">4</a></li>
+      <li ng-class="{current:polling.graph == '5'}" ng-click="graph_polling('5')"><a  href="javascript:void(0)">5</a></li>
+      <li ng-class="{current:polling.graph == '6'}" ng-click="graph_polling('6')"><a  href="javascript:void(0)">6</a></li>
+      <li ng-class="{current:polling.graph == '7'}" ng-click="graph_polling('7')"><a  href="javascript:void(0)">7</a></li>
+    </ul>
+  </div>
+  <div class="medium-4 columns timeline_divider">
+    <div class="section_divider"></div>
+  </div>
+</div>
+<div class="section-details-content foundation-row row row3" id="example_data1">
+  <div class="columns col1">
+    <div class="graphWidget OverGraphWidget">
+      <ul class="tabs throughtput_tabs" style="font-size:14px;">
+        <li> <a ng-click="navigate_scg_graph('client_devices')" href="javascript:void(0)" ng-class="{selected:scg_graph.menu == 'client_devices'}" class="ToolTipContent" id="throughput_overview">
+          <label help-id="throughput"><span> No of Client Devices</span></label>
+          </a> </li>
+        <li> <a ng-click="navigate_scg_graph('ap_count')" href="javascript:void(0)" ng-class="{selected:scg_graph.menu == 'ap_count'}" class="ToolTipContent" id="client_Overview">
+          <label help-id="clients"><span>AP Counts</span></label>
+          </a> </li>
+      </ul>
+      <div class="ThroughputClientschart1">
+        <highchart id="chart1" config="clientChart"></highchart>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="section-details-content foundation-row row row5" id="example_data" ng-show="tunnel_graph">
+  <div class="columns col1">
+    <div class="graphWidget OverGraphWidget">
+      <ul class="tabs throughtput_tabs" style="font-size:14px;">
+      
+      <li ng-repeat="m in tunnel_data"> 
+      
+      
+      <a ng-click="navigate_scg_graph('ap_count')" href="javascript:void(0)" class="selected">
+          <label><span>{{m.cplane_name}}</span></label>
+          </a>
+      
+      </li>
+      
+      <!--  <li> <a ng-click="navigate_scg_graph('client_devices')" href="javascript:void(0)" ng-class="{selected:scg_graph.menu == 'client_devices'}" class="ToolTipContent" id="throughput_overview">
+          <label help-id="throughput"><span> No of Client Devices</span></label>
+          </a> </li>
+        <li> <a ng-click="navigate_scg_graph('ap_count')" href="javascript:void(0)" ng-class="{selected:scg_graph.menu == 'ap_count'}" class="ToolTipContent" id="client_Overview">
+          <label help-id="clients"><span>AP Counts</span></label>
+          </a> </li>-->
+      </ul>
+      <div class="ThroughputClientschart1">
+        <highchart id="chart1" config="clientChart123"></highchart>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<style type="text/css">
+.no_table_data {
+    color: #97989c;
+    font-weight: bold;
+    left: 50%;
+    margin-left: -4.6875rem;
+    margin-top: 0.4375rem;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+}
+
+</style>
+<div class="section-details-content foundation-row row row2">
+  <div class="panel_wrapper">
+    <div class="panel table rounded white no_pad">
+      <div class="title_heading"> Critical Activities
+        <div class="dropdown alt"> <a href="#">Export</a>
+          <div> <a class="icosolo icon_arrow_down" href="#"></a> </div>
+        </div>
+        <div style=" position: absolute;right: 1rem;top: 1.1rem;"> <a href="javascript:void(0)" ng-click="ap_search()">Search</a> 
+          <!--<div> <a class="icosolo icon_arrow_down" href="#"></a>  
+          </div>--> 
+        </div>
+      </div>
+      <div class="table_wrapper" style="min-height:250px;">
+        <table id="selective_1" class="data selective">
+          <thead class="sortable">
+            <tr>
+              <th  class="persist essential sort down">Timestamp</th>
+              <th>SCG Name</th>
+              <th>Activities</th>
+            </tr>
+          </thead>
+         
+          <tbody>
+           <tr ng-show="showSearch">
+            <th> <input ng-model="timestamp" id="datetimepicker" type="text" ng-change="customfunction()" ></th>
+            <th> <input ng-model="scg_name" id="search" type="text" ng-change="customfunction()"></th>
+            <th> <input ng-model="scg_log" id="search" type="text" ng-change="customfunction()"></th>
+          </tr>
+            <tr dir-paginate="user in ca_activities  | itemsPerPage: usersPerPage" total-items="ca_items" current-page="pagination.current" pagination-id="criticalactivities">
+        
+              <td class="name"><span ng-bind-html="millisToUTCDate(user.Timestamp.$date) | date:'medium'"></span></td>
+              <td class="location"><span ng-bind-html="user.SCGName"></span></td>
+              <td class="location" style="white-space: normal; line-height:25px;"><span ng-bind-html="user.Content"></span> </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="no_table_data" ng-show="totalUsers === 0">No data to display</div>
+        <dir-pagination-controls boundary-links="true" on-page-change="CA_pageChanged(newPageNumber)" pagination-id="criticalactivities" template-url="modules/scg/dashboard/dirPagination.tpl.html"></dir-pagination-controls>
+        
+      </div>    
+    </div>
+    
+ <div class="search_actions" ng-if="config.hasSearch">
+  <div class="action_wrapper" style="cursor:pointer;">
+    <div class="button large blue mar_left" ng-click="ap_runSearch()" id="clientsTable_search_confirm">Search</div>
+    <div class="button large" ng-click="cancelSearch();" id="clientsTable_search_cancel">Cancel</div>
+  </div>
+  <div class="action_wrapper clear_button"> <a ng-click="clearSearch();" id="clientsTable_search_clear">Clear Values</a> </div>
+</div>
+
+  </div>
+  
+  
+</div>
+<script type="text/javascript">
+
+$('#datetimepicker').datetimepicker({format:'M d, Y H:i',step:1});
+
+</script>
+
+<div class="section-details-content foundation-row row row2" ng-controller="ThirdController">
+  <div class="panel_wrapper">
+    <div class="panel table rounded white no_pad">
+      <div class="title_heading"> AP Activities
+        <div class="dropdown alt"> <a href="#">Export</a>
+          <div> <a class="icosolo icon_arrow_down" href="#"></a> </div>
+        </div>
+        <div style=" position: absolute;right: 1rem;top: 1.1rem;"> <a href="javascript:void(0)" ng-click="ap_search()">Search</a> 
+          <!--<div> <a class="icosolo icon_arrow_down" href="#"></a>  
+          </div>--> 
+        </div>
+      </div>
+      <div class="table_wrapper" style="min-height:250px;">
+        <table id="selective_1" class="data selective">
+          <thead class="sortable">
+            <tr>
+              <th  class="persist essential sort down">Timestamp</th>
+              <th>SCG Name</th>
+              <th>Activities</th>
+            </tr>
+          </thead>
+         
+          <tbody>
+           <tr ng-show="showSearch">
+            <th> <input ng-model="timestamp" id="datetimepicker" type="text" ng-change="customfunction()" ></th>
+            <th> <input ng-model="scg_name" id="search" type="text" ng-change="customfunction()"></th>
+            <th> <input ng-model="scg_log" id="search" type="text" ng-change="customfunction()"></th>
+          </tr>
+            <tr dir-paginate="user in ap_activities  | itemsPerPage: usersPerPage" total-items="totalUsers" current-page="pagination.current" pagination-id="apactivities">
+        
+              <td class="name"><span ng-bind-html="millisToUTCDate(user.Timestamp.$date) | date:'medium'"></span></td>
+              <td class="location"><span ng-bind-html="user.SCGName"></span></td>
+              <td class="location" style="white-space: normal; line-height:25px;"><span ng-bind-html="user.Activity"></span> </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="no_table_data" ng-show="totalUsers === 0">No data to display</div>
+        <dir-pagination-controls boundary-links="true" on-page-change="pageChanged(newPageNumber)" pagination-id="apactivities" template-url="modules/scg/dashboard/dirPagination.tpl.html"></dir-pagination-controls>
+        
+      </div>    
+    </div>
+    
+ <div class="search_actions" ng-if="config.hasSearch">
+  <div class="action_wrapper" style="cursor:pointer;">
+    <div class="button large blue mar_left" ng-click="ap_runSearch()" id="clientsTable_search_confirm">Search</div>
+    <div class="button large" ng-click="cancelSearch();" id="clientsTable_search_cancel">Cancel</div>
+  </div>
+  <div class="action_wrapper clear_button"> <a ng-click="clearSearch();" id="clientsTable_search_clear">Clear Values</a> </div>
+</div>
+
+  </div>
+  
+  
+</div>

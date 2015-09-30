@@ -1,0 +1,106 @@
+/* Add these styles if NOT IE 
+
+ * Import this file using the following HTML conditional comment:
+<!--[if !IE]>-->
+  <link rel="stylesheet" type="text/css" href="stylesheets/ie_not.css" />
+<!--<![endif]--> */
+/* BREAKPOINTS */
+/* MEDIA QUERIES */
+/* BACKGROUND SIZING FOR IE */
+/* PLACEHOLDER TEXT FOR INPUTS */
+/* TABLES (Responsive) */
+table.data.responsive {
+  /* Label the data */
+}
+@media (max-width: 650px) {
+  table.data.responsive thead {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive tr, table.data.responsive td {
+    display: block;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-left: 40%;
+    max-width: 60%;
+    min-height: 1rem;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td:before {
+    display: block;
+    position: absolute;
+    left: 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: bold;
+    line-height: 1;
+    color: #646569;
+    text-transform: uppercase;
+    max-width: 35%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td:nth-of-type(1) {
+    padding-top: 3.125rem;
+    border-top: 1px solid #dfe1e5;
+    border-bottom: none;
+    background: #ebeef2;
+    -webkit-box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
+    -moz-box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.05) inset;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td.checkbox {
+    padding: 2.5rem 0 0;
+    width: 100%;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td.checkbox input[type=checkbox] {
+    position: absolute;
+    top: 1rem;
+    left: 0.875rem;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td:nth-last-of-type(2) {
+    border-bottom: none;
+  }
+}
+@media (max-width: 650px) {
+  table.data.responsive td.actions {
+    position: absolute;
+    padding-left: 0;
+    top: 0;
+    right: 0;
+    border: none;
+    background: none;
+  }
+}
+table.data.responsive td.name:before {
+  content: "Name";
+}
+table.data.responsive td.location:before {
+  content: "Location";
+}
+table.data.responsive td.status:before {
+  content: "Status";
+}
+table.data.responsive td.clients:before {
+  content: "Clients";
+}
+table.data.responsive td.ip:before {
+  content: "IP Address";
+}
+table.data.responsive td.type:before {
+  content: "Type";
+}

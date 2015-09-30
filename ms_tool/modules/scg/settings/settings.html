@@ -1,0 +1,416 @@
+<div id="device_container">
+  <div class="main-section-content foundation-row row">
+    <div class="section-header-content row collapse">
+      <div class="section-header medium-6 columns">
+        <h1>
+          <label> <span id="reports_net_summary_header">Settings</span> </label>
+        </h1>
+      </div>
+    </div>
+    <div id="accordion-container" class="accordion-container">
+      <div id="accordion-section-1" class="accordion-section section-details-content" ng-class="{selected: innerAccordion.activeSection == 'email'}">
+        <div class="accordion-title star AccMenuTitleColor" ng-click="navigateAccordion('email')">
+          <div class="section-title">
+            <label> <span id="conf_vpn_controller">Email</span> </label>
+          </div>
+          <span id="conf_vpn_acc_arrow_1" class="accordion-arrow"></span> </div>
+      </div>
+      <div id="accordion-section-content-1" class="accordion-section-content" jg-slide-scroll="" jg-slide="innerAccordion.activeSection == 'email'">
+        <div class="row">
+          <div class="section-left-content large-6 columns">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading"> Email Setting</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>Gateway</th>
+                        <th>SSL/TLS Port</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="status">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section-left-content large-6 columns">
+            <div class="forms">
+              <h4>Email Test</h4>
+              <div class="inputs cf">
+                <div class="small-9 medium-10 columns no-pad">
+                  <input class="addon" type="text">
+                </div>
+                <div class="small-3 medium-2 columns no-pad"> <a class="addon button">Send</a> </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="section-left-content large-6 columns">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">Receivers Email Setting</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>Gateway</th>
+                        <th>SSL/TLS Port</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="status">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br />
+              <div class="button-container"> <a class="button" href="#">Add Receiver</a> </div>
+            </div>
+          </div>
+          <div class="section-left-content large-6 columns">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading"> Sender Email Setting</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>Gateway</th>
+                        <th>SSL/TLS Port</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="status">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion-section-2" class="accordion-section section-details-content" ng-class="{selected: innerAccordion.activeSection == 'ftp'}">
+        <div class="accordion-title star AccMenuTitleColor" ng-click="navigateAccordion('ftp')">
+          <div class="section-title">
+            <label> <span id="conf_vpn_controller">FTP/TFTP</span> </label>
+          </div>
+          <span id="conf_vpn_acc_arrow_1" class="accordion-arrow"></span> </div>
+      </div>
+      <div id="accordion-section-content-1" class="accordion-section-content" jg-slide-scroll="" jg-slide="innerAccordion.activeSection == 'ftp'">
+        <div class="row">
+          <div class="section-left-content large-6 columns">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading"> Sender Email Setting</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>Services</th>
+                        <th>Option (Start/Stop/Restart)</th>
+                        <th>Path</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="status">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section-left-content large-6 columns">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">Path Containing Files</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>File Name</th>
+                        <th>File Size (Bytes)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion-section-4" class="accordion-section section-details-content" ng-class="{selected: innerAccordion.activeSection == 'swatch'}">
+        <div class="accordion-title star AccMenuTitleColor" ng-click="navigateAccordion('swatch')">
+          <div class="section-title">
+            <label> <span id="conf_vpn_controller">Swatch configuration</span> </label>
+          </div>
+          <span id="conf_vpn_acc_arrow_1" class="accordion-arrow"></span> </div>
+      </div>
+      <div id="accordion-section-content-1" class="accordion-section-content" jg-slide-scroll="" jg-slide="innerAccordion.activeSection == 'swatch'">
+        <div class="row">
+        
+        <div class="section-left-content large-12 columns">  
+          <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">RegEx Configuration</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>RegEx</th>
+                        <th>Severity</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br /><div class="button-container"> <a class="button" href="#">Add Event</a> </div>
+            </div>
+          </div>
+          
+          <!-- <div class="section-left-content large-6 columns">
+            <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">RegEx Configuration</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>RegEx</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="section-left-content large-6 columns">
+            <div class="forms">
+              <h4>Add Regular Expressions</h4>
+              <div class="inputs cf">
+                <label class="small-12 medium-2 columns">Regex:</label>
+                <div class="small-12 medium-6 columns input">
+                  <input type="text" placeholder="First">
+                </div>
+                <div class="small-12 medium-4 columns input"> <img src="images/icon_fallbacks/add_link.png" width="35px"  /> <img src="images/icon_fallbacks/delete_link.png" width="35px"  /> </div>
+                <div class="small-12 medium-12 columns">
+                <a class="small button" href="#">Save</a>
+                </div>
+                
+              </div>
+            </div>
+          </div> -->
+          
+          
+        </div>
+      </div>
+      <div id="accordion-section-5" class="accordion-section section-details-content" ng-class="{selected: innerAccordion.activeSection == 'event'}">
+        <div class="accordion-title star AccMenuTitleColor" ng-click="navigateAccordion('event')">
+          <div class="section-title">
+            <label> <span id="conf_vpn_controller">Event configuration</span> </label>
+          </div>
+          <span id="conf_vpn_acc_arrow_1" class="accordion-arrow"></span> </div>
+      </div>
+      <div id="accordion-section-content-1" class="accordion-section-content" jg-slide-scroll="" jg-slide="innerAccordion.activeSection == 'event'">
+        <div class="row">
+          <div class="section-left-content large-12 columns">  
+          <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">RegEx Configuration</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>RegEx</th>
+                        <th>Severity</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br /><div class="button-container"> <a class="button" href="#">Add Event</a> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion-section-6" class="accordion-section section-details-content" ng-class="{selected: innerAccordion.activeSection == 'log'}">
+        <div class="accordion-title star AccMenuTitleColor" ng-click="navigateAccordion('log')">
+          <div class="section-title">
+            <label> <span id="conf_vpn_controller">Log Alert configuration</span> </label>
+          </div>
+          <span id="conf_vpn_acc_arrow_1" class="accordion-arrow"></span> </div>
+      </div>
+      <div id="accordion-section-content-1" class="accordion-section-content" jg-slide-scroll="" jg-slide="innerAccordion.activeSection == 'log'">
+        <div class="row">
+          <div class="section-left-content large-12 columns">  
+          <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">RegEx Configuration</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>RegEx</th>
+                        <th>Severity</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br /><div class="button-container"> <a class="button" href="#">Add Event</a> </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="accordion-section-7" class="accordion-section section-details-content" ng-class="{selected: innerAccordion.activeSection == 'mib'}">
+        <div class="accordion-title star AccMenuTitleColor" ng-click="navigateAccordion('mib')">
+          <div class="section-title">
+            <label> <span id="conf_vpn_controller">Upload MIB</span> </label>
+          </div>
+          <span id="conf_vpn_acc_arrow_1" class="accordion-arrow"></span> </div>
+      </div>
+      <div id="accordion-section-content-1" class="accordion-section-content" jg-slide-scroll="" jg-slide="innerAccordion.activeSection == 'mib'">
+        <div class="row">
+         <div class="section-left-content large-12 columns">  
+          <div class="panel_wrapper">
+              <div class="panel table rounded white no_pad">
+                <div class="title_heading">RegEx Configuration</div>
+                <div class="table_wrapper">
+                  <table class="data responsive">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>File Name</th>
+                        <th>Version</th>
+                        <th>File Size (Bytes)</th>
+                        <th>Created date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="name">10.9.160.40</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                        <td class="location">NULL</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <br /><div class="button-container"> <a class="button" href="#">Add Event</a> </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- <div class="row">
+      <div class="section-left-content columns">
+        <div class="columns col1">
+          <div class="graphWidget OverGraphWidget">
+            <ul class="tabs throughtput_tabs" style="font-size:13px;">
+              <li> <a ng-click="throughputSelected()" href="javascript:void(0)" ng-class="{selected:isThroughPutSelectedForFirstChart}" class="ToolTipContent selected" id="throughput_overview">
+                <label help-id="throughput"><span>Email</span></label>
+                </a> </li>
+              <li> <a ng-click="clientsSelected()" href="javascript:void(0)" ng-class="{selected:isClientSelectedForFirstChart}" class="ToolTipContent" id="client_Overview">
+                <label help-id="clients"><span>FTP/TFTP</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidthroughputSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDThroughPutSelectedForFirstChart}" class="ToolTipContent" id="throughput_ssid_overview">
+                <label help-id="ssid_throughput"><span>User</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+                <label help-id="ssid_client_graph"><span>Swatch configuration</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+                <label help-id="ssid_client_graph"><span>Swatch configuration</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+                <label help-id="ssid_client_graph"><span>Swatch configuration</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+                <label help-id="ssid_client_graph"><span>Swatch configuration</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+                <label help-id="ssid_client_graph"><span>Swatch configuration</span></label>
+                </a> </li>
+              <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+                <label help-id="ssid_client_graph"><span>Swatch configuration</span></label>
+                </a> </li>
+            </ul>
+            <div class="ThroughputClientschart"> </div>
+          </div>
+        </div>
+      </div>
+    </div>  --> 
+    
+  </div>
+</div>

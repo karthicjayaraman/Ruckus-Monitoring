@@ -1,0 +1,555 @@
+### This is SCG Dashboard blue print
+### This will respond the jsons regarding scg dashboard such as global config, devices, dataplane, controlplane
+### Date: Sep 3rd, 2015
+
+from flask import Blueprint,g, request
+from flask_cors import cross_origin
+import json
+import datetime
+from bson import json_util
+from ..lib.data_tables import big_table
+scg_dashboard = Blueprint('scg_dashboard', __name__, url_prefix='/scg')
+
+### End points 
+@scg_dashboard.route('/global_config', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def global_config():
+	config={}
+	config['time']=datetime.datetime.now().strftime("%A %b %d, %Y  %I:%M %p");
+	pi_sql="select Pinterval from Settings.polling_interval where Device='SCG'";
+	data_pi = g.conn.select_advanced(pi_sql);
+	config['pollingInterval']=int(data_pi[0]);
+	config['noOfDays']=7;
+	lu_sql="SELECT TIMESTAMP FROM Devices ORDER BY TIMESTAMP DESC LIMIT 1";
+	data = g.conn.select_advanced(lu_sql);
+	config['lastUpdated']=str(data[0]);
+	#json_string="{'time':'"+str(config['time'])+"','pollingInterval':'"+str(config['pollingInterval'])+"','noOfDays':'7', 'lastUpdated':'"+str(config['lastUpdated'])+"'}";	
+	#return json_string
+	return json.dumps(config, default=json_util.default)
+
+@scg_dashboard.route('/get_devices')
+@cross_origin()
+def get_devices():
+	columns=['SCGIP','ClusterName','Role','NoOfControlPlane','NoOfDataPlane','NoOfAPs','NoOfClients','SCGVersion','ControlPlaneSoftwareVersion','DataPlaneSoftwareVersion','Consumed','WiFiControlLicenses','Timestamp']
+	device_sql="select "+",".join(columns)+" from Devices";
+	result=[];
+	data = g.conn.select_advanced(device_sql);
+	for row in data:
+		row_data=dict(zip(columns, row));
+		row_data['NoOfPlanes']=str(row_data['NoOfControlPlane'])+"/"+str(row_data['NoOfDataPlane']);
+		row_data['WiFiControlLicenses']=str(row_data['Consumed'])+"/"+str(row_data['WiFiControlLicenses']);
+		scgip=row_data['SCGIP'];
+		### number of connected, disconnected and all APs
+		noOfDisConAp=g.conn.select_advanced("SELECT SUM( DisconnectedAP ) FROM `ZoneDetails` WHERE SCGIP =  '"+scgip+"'");
+		noOfDisConAp=noOfDisConAp[0];
+		if noOfDisConAp==None:
+			noOfDisConAp='0';
+		noOfDisConAp=int(noOfDisConAp);
+		totalAP=noOfDisConAp+int(row_data['NoOfAPs']);
+		row_data['NoOfAPs']=str(totalAP)+"("+str(row_data['NoOfAPs'])+"/"+str(noOfDisConAp)+")";
+		#row_data['Timestamp']=str(row_data['Timestamp']);
+		follower=g.conn.select_advanced("select ManagementIP from ControlPlaneDetails where SCGIP='"+scgip+"' and Role='Follower'");
+		row_data['Follower']=",".join(follower);
+  		result.append(row_data);
+	return json.dumps(result, default=json_util.default)
+
+
+
+@scg_dashboard.route('/get_control_plane', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_control_plane():
+	scgip='';
+	if request.method == 'POST':
+     		json_data = request.get_json()
+		scgip=json_data.get("scg_ip", "")
+	planes={}
+	columns=['ControlPlaneName','Model','SerialNumber','Description','Firmware','ManagementIP','ClusterIP','ControlIP','Role','NumberOfPorts','NumberOfAPs','NumberOfClients','CPUPercentage_Max_Min_Avg','MemoryPercentage_Max_Min_Avg','DiskUsage_Max_Min_Avg','Status','Uptime'];
+	cplane_sql="select "+",".join(columns)+" from ControlPlaneDetails where SCGIP='"+scgip+"'";
+	result=[]
+	data = g.conn.select_advanced(cplane_sql);
+        for row in data:
+		cd_plane={}
+		cplane=row[0];
+		dpcols=['DataPlaneName','IPAddress','MACAddress','Model','SerialNumber','Firmware','ManagedBy','NumberOfTunnels','Status','Uptime'];
+		dp_sql="select "+",".join(dpcols)+" from DataPlaneDetails where SCGIP='"+scgip+"' and ControlPlaneName='"+cplane+"'";
+		ddata = g.conn.select_advanced(dp_sql);
+		dplane_list=[]
+		for dp in ddata:
+			dplane_list.append(dict(zip(dpcols, dp)))
+                cplane=dict(zip(columns, row))
+		for key in cplane:
+			if cplane[key]==None:
+				cplane[key]="null";
+		cplane['cpu_min']=cplane['CPUPercentage_Max_Min_Avg'];
+		cplane['memory_min']=cplane['MemoryPercentage_Max_Min_Avg'];
+		cplane['disk_min']=cplane['DiskUsage_Max_Min_Avg'];
+		cd_plane['cplane']=cplane
+		cd_plane['dplane']=dplane_list
+		result.append(cd_plane);
+        return json.dumps(result, default=json_util.default)
+	
+
+@scg_dashboard.route('/get_zone_details', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_zone_details():
+        page=1;
+        limit=10;
+        table="ZoneDetails";
+        where="1=1";
+        columns=['ZoneName','Description','ManagementDomain','CreatedOn','CreatedBy','NumberofWLANs','NumberofAPs','NumberofClients','TunnelType']
+        sparams={};
+        if request.method == 'POST':
+                json_data = request.get_json();
+		### Limit parameters
+                limit=json_data.get("limit", "")
+                page=json_data.get("page","")
+                if limit=='':
+                        limit=10;
+                else:
+                        limit=int(limit);
+                if page=='':
+                        page=1;
+                else:
+                        page=int(page);
+		### Search parameters
+	        zone_name="";
+        	description="";
+        	management_domain="";
+        	created_date="";
+        	created_by="";
+        	number_wlan="";
+        	number_ap="";
+        	number_clients="";
+        	tunnel_type="";
+                zone_name=json_data.get("zone_name","")
+                description=json_data.get("description","")
+                management_domain=json_data.get("management_domain","")
+                created_date=json_data.get("created_date","")
+                created_by=json_data.get("created_by","")
+                number_wlan=json_data.get("number_wlan","")
+                number_ap=json_data.get("number_ap","")
+                number_clients=json_data.get("number_clients","")
+                tunnel_type=json_data.get("tunnel_type","")
+        	if zone_name!='' and zone_name!=None:
+			sparams['ZoneName']=zone_name;
+        	if description!='' and description!=None:
+			sparams['Description']=description;
+        	if management_domain!='' and management_domain!=None:
+			sparams['ManagementDomain']=management_domain;
+        	if created_date!='' and created_date!=None:
+			sparams['CreatedOn']=created_date;
+        	if created_by!='' and created_by!=None:
+			sparams['CreatedBy']=created_by;
+        	if number_wlan!='' and number_wlan!=None:
+			sparams['NumberofWLANs']=number_wlan;
+        	if number_ap!='' and number_ap!=None:
+			sparams['NumberofAPs']=number_ap;
+        	if number_clients!='' and number_clients!=None:
+			sparams['NumberofClients']=number_clients;
+        	if tunnel_type!='' and tunnel_type!=None:
+			sparams['TunnelType']=tunnel_type;
+		### Where clause
+		scg_ip="";
+		scg_ip=json_data.get("scg_ip", "")
+		if scg_ip!='' and scg_ip!=None:
+			where = " SCGIP='"+scg_ip+"'"
+        return big_table(tablename=table,where_condition=where,limit=limit,page=page,columns=columns,search=sparams);
+
+@scg_dashboard.route('/get_critical_activities', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_critical_activities():
+        page=1;
+        limit=10;
+        table="CriticalActivities";
+        where="1=1";
+        columns=['Timestamp','SCGName','Content']
+        sparams={};
+        if request.method == 'POST':
+                json_data = request.get_json();
+                limit=json_data.get("limit", "")
+                page=json_data.get("page","")
+                if limit=='':
+                        limit=10;
+                else:
+                        limit=int(limit);
+                if page=='':
+                        page=1;
+                else:
+                        page=int(page);
+                scg_name=""
+                scg_log="";
+                timestamp=""
+                scg_name=json_data.get("scg_name","")
+                scg_log=json_data.get("scg_log","")
+                timestamp=json_data.get("timestamp","")
+                if scg_name!='' and scg_name!=None:
+                        sparams['SCGName']=scg_name;
+                if scg_log!='' and scg_log!=None:
+                        sparams['Content']=scg_log;
+                if timestamp!='' and timestamp!=None:
+                        sparams['Timestamp']=convert_timestamp(timestamp);
+        return big_table(tablename=table,where_condition=where,limit=limit,page=page,columns=columns,search=sparams);
+
+@scg_dashboard.route('/get_ap_activities', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_ap_activities():
+        page=1;
+	limit=10;
+	table="APActivities";
+	where="1=1";
+        columns=['Timestamp','SCGName','Activity']
+	sparams={};
+        if request.method == 'POST':
+                json_data = request.get_json();
+                limit=json_data.get("limit", "")
+                page=json_data.get("page","")
+                if limit=='':
+                        limit=10;
+                else:
+                        limit=int(limit);
+                if page=='':
+                        page=1;
+                else:
+                        page=int(page);
+                scg_name=""
+                scg_log="";
+                timestamp=""
+                scg_name=json_data.get("scg_name","")
+                scg_log=json_data.get("scg_log","")
+                timestamp=json_data.get("timestamp","")
+		if scg_name!='' and scg_name!=None:
+			sparams['SCGName']=scg_name;
+		if scg_log!='' and scg_log!=None:
+			sparams['Activity']=scg_log;
+		if timestamp!='' and timestamp!=None:
+			sparams['Timestamp']=convert_timestamp(timestamp);
+	return big_table(tablename=table,where_condition=where,limit=limit,page=page,columns=columns,search=sparams);
+
+@scg_dashboard.route('/get_ap_activities_old', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_ap_activities_old():
+	start=1;
+	limit=20;
+	page=1;
+	scg_name=""
+	scg_log="";
+	timestamp=""
+	columns=['Timestamp','SCGName','Activity']
+        if request.method == 'POST':
+                json_data = request.get_json();
+		print json_data
+                limit=json_data.get("limit", "")
+                page=json_data.get("page","")
+		scg_name=json_data.get("scg_name","")
+		scg_log=json_data.get("scg_log","")
+		timestamp=json_data.get("timestamp","")
+		if limit=='':
+			limit=20;
+		else:
+			limit=int(limit);
+		if page=='':
+			page=1;
+		else:
+			page=int(page);
+	page=page-1;
+	start=limit*page
+	wh=0;
+	where_clause=" where "
+	if scg_log!='' and scg_log!=None:
+		where_clause=where_clause+" Activity like '%%"+scg_log+"%%' and"
+		wh=1;
+	if scg_name!='' and scg_name!=None:
+		where_clause=where_clause+" SCGName like '%%"+scg_name+"%%' and"
+		wh=1;
+	if timestamp!='' and timestamp!=None:
+		timestamp=convert_timestamp(timestamp);
+		where_clause=where_clause+" Timestamp like '%%"+timestamp+"%%' and"
+		wh=1;
+	if wh==1:
+		where_clause=where_clause[:-4]
+	else:
+		where_clause=""
+	count_sql="select count(*) from APActivities";
+	cdata = g.conn.select_advanced(count_sql);
+	count = cdata[0];
+	fcount=count;
+	if wh==1:
+		f_count_sql=count_sql+where_clause;
+		print f_count_sql
+		fc_data= g.conn.select_advanced(f_count_sql);
+		fcount = fc_data[0];
+		print fcount
+	if fcount < start:
+		start=0;
+
+        ap_act_sql="select Timestamp,SCGName,Activity from APActivities "+where_clause+" order by Timestamp desc limit "+str(start)+","+str(limit);
+
+        print "\n"+ap_act_sql+"\n"
+        result=[];
+        data = g.conn.select_advanced(ap_act_sql);
+        for row in data:
+                #print row
+                result.append(dict(zip(columns, row)))
+	json_data={'count':count, 'items':result, 'filter_count':fcount }
+	print "\n\n"
+        return json.dumps(json_data, default=json_util.default)
+
+
+@scg_dashboard.route('/get_ap_activities_full', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_ap_activities_full():
+        columns=['Timestamp','SCGName','Activity']
+        ap_act_sql="select Timestamp,SCGName,Activity from APActivities";
+        result=[];
+        data = g.conn.select_advanced(ap_act_sql);
+        for row in data:
+                result.append(dict(zip(columns, row)))
+        count_sql="select count(*) from APActivities";
+        cdata = g.conn.select_advanced(count_sql);
+        count=cdata[0];
+        json_data={'count':count, 'items':result}
+
+        return json.dumps(json_data, default=json_util.default)
+
+
+### End points for Graphs
+
+
+@scg_dashboard.route('/get_client_device_data',  methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_client_device_data():
+	days='7';
+        if request.method == 'POST':
+                json_data = request.get_json();
+                days=json_data.get("days", "")
+
+	noOfDevice_sql="select ScgIP,NoOfClients,Timestamp from DevicesCompleteInfo where Timestamp>=DATE_SUB(CURDATE(),INTERVAL "+str(days)+" DAY) ORDER BY ScgIP, TimeStamp asc";
+	data = g.conn.select_advanced(noOfDevice_sql);
+	print noOfDevice_sql
+	scgip_list=[];
+	json_string='[ { "name" : "Show/Hide All" } ';
+	for row in data:
+		if row[0] not in scgip_list:
+			scgip_list.append(row[0]);
+
+        for scgip in scgip_list:
+                graph_data=[]
+                for row in data:
+                        if row[0]==scgip:
+                                timestamp=str(row[2]);
+				timestamp=int(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime('%s')) * 1000;
+                                count=row[1]
+                                if count != None:
+                                        graph_data.append("["+str(timestamp)+","+str(count)+"]");
+		json_string=json_string+', { "name" : "'+scgip+'" , "data" : '+'[ '+', '.join(graph_data)+' ] }';
+	json_string=json_string+' ]';
+	return json_string;
+	
+		
+@scg_dashboard.route('/get_ap_device_data', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_ap_device_data():
+        days='7';
+        if request.method == 'POST':
+                json_data = request.get_json();
+                days=json_data.get("days", "")
+        noOfDevice_sql="select ScgIP,NoOfAPs,Timestamp from DevicesCompleteInfo WHERE  Timestamp>=DATE_SUB(CURDATE(),INTERVAL "+str(days)+" DAY) ORDER BY ScgIP, TimeStamp asc";
+        data = g.conn.select_advanced(noOfDevice_sql);
+	print noOfDevice_sql;
+        scgip_list=[];
+        json_string='[ { "name" : "Show/Hide All" }';
+        for row in data:
+                if row[0] not in scgip_list:
+                        scgip_list.append(row[0]);
+
+        for scgip in scgip_list:
+                scgip_data={'name':scgip};
+                graph_data=[]
+                for row in data:
+                        if row[0]==scgip:
+                                timestamp=str(row[2]);
+				timestamp=int(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime('%s')) * 1000;
+                                count=row[1]
+                                if count != None:
+                                        graph_data.append("["+str(timestamp)+","+str(count)+"]");
+                json_string=json_string+',{ "name" :"'+scgip+'" , "data" : '+'[ '+', '.join(graph_data)+' ] }';
+        json_string=json_string+' ]';
+        return json_string;
+
+
+@scg_dashboard.route('/get_tunnel_graph_data', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_tunnel_graph_data():
+        scgip='';
+	days='7'
+        if request.method == 'POST':
+                json_data = request.get_json();
+                scgip=json_data.get("scg_ip", "")
+		days=json_data.get("days", "")
+	if days=='' or days==None:
+		days='7'
+        #if scgip=='scgip':
+        #        scg_sql="SELECT SCGIP from Devices limit 1";
+        #        scg_d=g.conn.select_advanced(scg_sql);
+        #        scgip=scg_d[0];
+	control_planes=[]
+        days=int(days)
+        cplane_sql="SELECT `ControlPlaneName` FROM `ControlPlaneDetails` where `SCGIP`='"+scgip+"' ";
+        cplane_d=g.conn.select_advanced(cplane_sql);
+        #control_planes.append(cplane_d[0]);
+        days=7;
+	for cplane in cplane_d:
+		print cplane
+        	tunnel_sql="SELECT  DataPlaneName, NumberOfTunnels,TimeStamp FROM `DataPlaneDetailsCompleteInfo` where ControlPlaneName='"+cplane+"' and SCGIP='"+scgip+"' and DataPlaneName!='' and Timestamp>=DATE_SUB(CURDATE(),INTERVAL "+str(days)+" DAY)"
+        	#data = g.conn.select_advanced(tunnel_sql);
+        	data = g.conn.select_advanced(tunnel_sql);
+        	#print tunnel_sql;
+        	dplane_list=[];
+        	json_string=' { "cplane_name": "'+cplane+'", "data": [ { "name" : "Show/Hide All" }';
+        	for row in data:
+                	if row[0] not in dplane_list:
+                        	dplane_list.append(row[0]);
+
+        	for dplane in dplane_list:
+                	graph_data=[]
+                	for row in data:
+                        	if row[0]==dplane:
+                                	timestamp=str(row[2]);
+                                	timestamp=int(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime('%s')) * 1000;
+                                	count=row[1]
+                                	if count != None:
+                                        	graph_data.append("["+str(timestamp)+","+str(count)+"]");
+                	json_string=json_string+',{ "name" :"'+dplane+'" , "data" : '+'[ '+', '.join(graph_data)+' ] }';
+        	json_string=json_string+' ] }';
+        	control_planes.append(json_string)
+	result="["+",".join(control_planes)+"]"
+	return result
+	
+	'''
+        scgip='scgip';
+	cplane='cplane';
+        if request.method == 'POST':
+                json_data = request.get_json();
+                scgip=json_data.get("scg_ip", "")
+		cplane=json_data.get("cplane","")
+	if scgip=='scgip':
+		scg_sql="SELECT SCGIP from Devices limit 1";
+		scg_d=g.conn.select_advanced(scg_sql);
+		scgip=scg_d[0];
+	if cplane=='cplane':
+		cplane_sql="SELECT `ControlPlaneName` FROM `ControlPlaneDetails` where `SCGIP`='"+scgip+"' limit 1";
+		cplane_d=g.conn.select_advanced(cplane_sql);
+		cplane=cplane_d[0];
+	
+	tunnel_sql="SELECT  DataPlaneName, NumberOfTunnels,TimeStamp FROM `DataPlaneDetailsCompleteInfo` where ControlPlaneName='"+cplane+"' and SCGIP='"+scgip+"' and DataPlaneName!=''"
+        data = g.conn.select_advanced(tunnel_sql);
+	print tunnel_sql;
+        dplane_list=[];
+        json_string='[ { "name" : "Show/Hide All" }';
+        for row in data:
+                if row[0] not in dplane_list:
+                        dplane_list.append(row[0]);
+
+        for dplane in dplane_list:
+                graph_data=[]
+                for row in data:
+                        if row[0]==dplane:
+                                timestamp=str(row[2]);
+                                timestamp=int(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime('%s')) * 1000;
+                                count=row[1]
+                                if count != None:
+                                        graph_data.append("["+str(timestamp)+","+str(count)+"]");
+                json_string=json_string+',{ "name" :"'+dplane+'" , "data" : '+'[ '+', '.join(graph_data)+' ] }';
+        json_string=json_string+' ]';
+        return json_string;
+	'''
+
+@scg_dashboard.route('/get_cplane_uptime_data', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_cplane_uptime_data():
+        scgip='scgip';
+        if request.method == 'POST':
+                json_data = request.get_json();
+                scgip=json_data.get("scg_ip", "")
+	cuptime_sql="SELECT  ControlPlaneName, Uptime,TimeStamp FROM `ControlPlaneDetailsCompleteInfo` where  SCGIP='"+scgip+"'"
+        data = g.conn.select_advanced(cuptime_sql);
+        cplane_list=[];
+        json_string='[ { "name" : "Show/Hide All" }';
+        for row in data:
+                if row[0] not in cplane_list:
+                        cplane_list.append(row[0]);
+
+        for cplane in cplane_list:
+                graph_data=[]
+                for row in data:
+                        if row[0]==cplane:
+                                timestamp=str(row[2]);
+                                timestamp=int(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime('%s')) * 1000;
+                                uptime=convert_to_min(row[1]);				
+                                if uptime != None:
+                                        graph_data.append("["+str(timestamp)+","+str(uptime)+"]");
+                json_string=json_string+',{ "name" :"'+cplane+'" , "data" : '+'[ '+', '.join(graph_data)+' ] }';
+        json_string=json_string+' ]';
+        return json_string;
+
+@scg_dashboard.route('/get_dplane_uptime_data', methods=['GET', 'POST', 'OPTIONS'])
+@cross_origin()
+def get_dplane_uptime_data():
+        scgip='scgip';
+	cplane='cplane';
+        if request.method == 'POST':
+                json_data = request.get_json();
+                scgip=json_data.get("scg_ip", "")
+		cplane=json_data.get("cplane","")
+        duptime_sql="SELECT  DataPlaneName, Uptime,TimeStamp FROM `DataPlaneDetailsCompleteInfo` where ControlPlaneName='"+cplane+"' and SCGIP='"+scgip+"' and DataPlaneName!=''"
+        data = g.conn.select_advanced(duptime_sql);
+        dplane_list=[];
+        json_string='[ { "name" : "Show/Hide All" }';
+        for row in data:
+                if row[0] not in dplane_list:
+                        dplane_list.append(row[0]);
+
+        for dplane in dplane_list:
+                graph_data=[]
+                for row in data:
+                        if row[0]==dplane:
+                                timestamp=str(row[2]);
+                                timestamp=int(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime('%s')) * 1000;
+                                uptime=convert_to_min(row[1]);
+                                if uptime != None:
+                                        graph_data.append("["+str(timestamp)+","+str(uptime)+"]");
+                json_string=json_string+',{ "name" :"'+dplane+'" , "data" : '+'[ '+', '.join(graph_data)+' ] }';
+        json_string=json_string+' ]';
+        return json_string;
+
+def convert_to_min(uptime):
+        uptime=uptime.split();
+        day=0;
+        hour=0;
+        min=0;
+        sec=0;
+        for upt in uptime:
+                if upt.endswith('d'):
+                        day=int(upt[:-1]);
+                        continue;
+			continue;
+		if upt.endswith('h'):
+			hour=int(upt[:-1]);
+			continue;
+		if upt.endswith('m'):
+			min=int(upt[:-1]);
+			continue;
+		if upt.endswith('s'):
+			sec=int(upt[:-1]);
+	result=(day*24*60)+(hour*60)+(min*1)+int(sec/60)
+	return result;
+
+def convert_timestamp(search_time):
+	print search_time
+        try:
+                dtime=datetime.datetime.strptime(search_time,"%b %d, %Y %H:%M");
+		print dtime
+                search_time=dtime.strftime("%Y-%m-%d %H:%M")
+        except Exception:
+                pass
+	return str(search_time)

@@ -1,0 +1,129 @@
+<div>
+  <div class="main-section-content foundation-row row1">
+    <div class="section-header-content row collapse">
+      <div class="section-header medium-8 columns">
+        <h1>
+          <label id="mon_overview_header">Devices Overview</label>
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div class="section-details-content foundation-row row row3">
+    <div class="medium-4 columns timeline_divider">
+      <div class="section_divider"></div>
+    </div>
+    <div class="medium-4 columns timeline">
+      <ul class="seggyc">
+        <li class="current"><a href="#">5</a></li>
+        <li><a href="#">15</a></li>
+        <li><a href="#">20</a></li>
+        <li><a href="#">30</a></li>
+        <li><a href="#">60</a></li>
+      </ul>
+    </div>
+    <div class="medium-4 columns timeline_divider">
+      <div class="section_divider"></div>
+    </div>
+  </div>
+  <div class="section-details-content foundation-row row row2">
+    <div class="panel_wrapper">
+      <div class="panel table rounded white no_pad">
+        <div class="title_heading">Devices Overview (Last updated: 2015-08-24 15:32:06) </div>
+        <div class="table_wrapper">
+          <table class="data responsive">
+            <thead>
+              <tr>
+                <th>SCG</th>
+                <th>Cluster Name</th>
+                <th>Role</th>
+                <th>Number of Planes(Control/Data)</th>
+                <th>Number of AP's</th>
+                <th>Number of Clients</th>
+                <th>Tunnels Graph</th>
+                <th>Uptime Graph</th>
+                <th>SCG Version</th>
+                <th>Control Plane Software Version</th>
+                <th>Data Plane Software Version</th>
+                <th>WiFi Controller Licenses(Consumed/Total)</th>
+                <th>UI Login Test</th>
+                <th>Follower</th>
+                <th>TimeStamp</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">10.9.160.40</td>
+                <td class="location">NULL</td>
+                <td class="status">NULL</td>
+                <td class="clients">0/0</td>
+                <td class="ip">0 ( 0/ )</td>
+                <td class="type">0</td>
+                <td class="type">0</td>
+                <td class="type">0</td>
+                <td class="type">1.1.1.0.150</td>
+                <td class="type">1.1.1.0.150</td>
+                <td class="type">1.1.1.0.112</td>
+                <td class="type">/</td>
+                <td class="type">Fail</td>
+                <td class="type">-</td>
+                <td class="type">2014-05-08 17:00:33</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section-details-content foundation-row row row2">
+    <div class="panel_wrapper">
+      <div class="panel table rounded white no_pad">
+        <div class="title_heading">Devices Overview (Last updated: 2015-08-24 15:32:06) </div>
+        <div class="table_wrapper">
+          <table class="data responsive">
+            <thead class="sortable">
+              <tr>
+                <th class="sort down">Name</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Clients</th>
+                <th>IP Address</th>
+                <th>Type</th>
+                <th class="actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">24:de:c6:c8:d9:8c</td>
+                <td class="location">Downtown</td>
+                <td class="status">Up</td>
+                <td class="clients">105</td>
+                <td class="ip">192.168.2.26</td>
+                <td class="type">AP-135</td>
+                <td class="actions"><a class="icosolo icon_edit" href="#"></a> <a class="icosolo icon_settings" href="#"></a> <a class="icosolo icon_delete delete" href="#"></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="columns col1">
+    <div class="graphWidget OverGraphWidget">
+      <ul class="tabs throughtput_tabs">
+        <li> <a ng-click="throughputSelected()" href="javascript:void(0)" ng-class="{selected:isThroughPutSelectedForFirstChart}" class="ToolTipContent selected" id="throughput_overview">
+          <label help-id="throughput"><span>THROUGHPUT</span></label>
+          </a> </li>
+        <li> <a ng-click="clientsSelected()" href="javascript:void(0)" ng-class="{selected:isClientSelectedForFirstChart}" class="ToolTipContent" id="client_Overview">
+          <label help-id="clients"><span>CLIENTS</span></label>
+          </a> </li>
+        <li> <a ng-click="ssidthroughputSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDThroughPutSelectedForFirstChart}" class="ToolTipContent" id="throughput_ssid_overview">
+          <label help-id="ssid_throughput"><span>WIRELESS DATA USAGE</span></label>
+          </a> </li>
+        <li> <a ng-click="ssidclientsSelected()" href="javascript:void(0)" ng-class="{selected:isSSIDClientSelectedForFirstChart}" class="ToolTipContent" id="client_ssid_Overview">
+          <label help-id="ssid_client_graph"><span>WIRELESS CLIENTS</span></label>
+          </a> </li>
+      </ul>
+      <div class="ThroughputClientschart"> </div>
+    </div>
+  </div>
+</div>

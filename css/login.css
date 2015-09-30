@@ -1,0 +1,157 @@
+/*Login Page*/
+
+
+
+.loginDiv{
+    width : 100%;
+    height: 100%;
+    top : 0;
+    left: 0;
+    z-index: 100;
+    position: absolute;
+    background-color: #a7a09a;
+    background-image: url("../images/spine-bg.png");
+}
+
+.loginContainer{
+    width: 300px;
+    height: 410px;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.loginLogo{
+    width: 210px;
+    height: 74px;
+    margin: 20px;
+    text-align: center;
+    background-image: url("../images/logo.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 210px 74px;
+}
+.loginLogoDividerLine{
+    width: 50px;
+    height: 2px;
+    top: 100px;
+    margin-left:125px;
+    background-color: #ECEDEE;
+}
+.loginACE{
+    width: 260px;
+    color: #003969;
+    font-size: 14px;
+    text-align: left;
+    padding: 20px;
+}
+.loginTxtUName{
+    width: 240px;
+    background: white;
+    background-image: url(../images/icon_fallbacks/avatar_text.png);
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: 7px 9px;
+    height: 2.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-family: 'opensans', helvetica, arial, sans-serif;
+    font-size: 0.875rem;
+    color: black;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.loginTxtPWord{
+    width : 240px;
+    background : white;
+    background-image: url(../images/icon_fallbacks/lock_text.png);
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    background-position: 5px 9px;
+}
+#loginButton{
+    padding : 10px 50px;/* Top&Bottom Left&Right */
+    margin : 10px 0px 20px;/* Top&Bottom Left&Right */
+    cursor: pointer;
+}
+.loginFailedContainer{
+    position: absolute;
+    width: 170px;
+    height: 40px;
+    top:238px;
+    left: 280px;
+}
+.loginFailedArrowLeft {
+    width: 0;
+    height: 0;
+    margin-top: 10px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right:10px solid rgba(255,0,0,0.8);
+    float: left;
+}
+.loginFailedContent{
+    float:left;
+    border-radius:5px;
+    width:160px;
+    background:rgba(255,0,0,0.8);
+}
+.loginFailedImage{
+    width: 40px;
+    height: 40px;
+    margin-left: 5px;
+    text-align: center;
+    background-image: url("../images/icon_fallbacks/alert_white.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    float: left;
+}
+.loginFailedLabel{
+    color: #ffffff;
+    float: left;
+    margin-top:14px;
+    margin-left: 5px;
+}
+.loginFooter{
+    color: #D9DEDF;
+    text-align: center;
+    font-size: 10px;
+    padding: 10px;
+}
+@media all and (max-width: 620px){
+    #loginButton{
+        margin : 38px 0px 20px;/* Top&Bottom Left&Right */
+    }
+    .loginFailedContainer{
+        left: 70px;
+        top: 278px;
+    }
+    .loginFailedArrowLeft {
+        display: none;
+    }
+    .loginFailedContent{
+        background-color: transparent;
+    }
+    .loginFailedLabel{
+        color : red;
+    }
+    .loginFailedImage{
+        background-image: url("../images/icon_fallbacks/alert_text.png");
+    }
+}

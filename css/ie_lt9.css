@@ -1,0 +1,6 @@
+/* Override styles for IE 8 and below.
+
+ * Import this file using the following HTML conditional comment:
+<!--[if lt IE 9]>
+  <link rel="stylesheet" type="text/css" href="stylesheets/ie_lt9.css" />
+<![endif]--> */
